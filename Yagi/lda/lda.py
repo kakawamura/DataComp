@@ -103,7 +103,6 @@ def main():
     parser.add_option("--beta", dest="beta", type="float", help="parameter beta", default=0.5)
     parser.add_option("-k", dest="K", type="int", help="number of topics", default=20)
     parser.add_option("-i", dest="iteration", type="int", help="iteration count", default=100)
-    parser.add_option("-s", dest="save", help="save fig (True/False)", default=False)
     (options, args) = parser.parse_args()
 
     if not options.filename:
@@ -132,9 +131,7 @@ def main():
     logfile.close()
 
     output.output_word_topic_dist(lda, voca, path)
-
-    if options.save:
-        output.save_fig(lda, options.K, path)
+    output.save_fig(lda, options.K, path)
 
 if __name__ == "__main__":
     main()

@@ -13,8 +13,8 @@ def get_path():
 
 def show_options(logfile, corpus, voca, options):
     logfile.write("\n------------------- options--------------------\n")
-    logfile.write("\ncustomer=%d \nitems=%d \nK=%d \nalpha=%f \nbeta=%f \niteration=%d\nsave_fig=%s\n" % (len(corpus), len(voca.vocas), options.K, options.alpha, options.beta, options.iteration, options.save))
-    print ("\ncustomer=%d, items=%d, K=%d, alpha=%f, beta=%f, iter=%d, save=%s\n" % (len(corpus), len(voca.vocas), options.K, options.alpha, options.beta, options.iteration, options.save))
+    logfile.write("\ncustomer=%d \nitems=%d \nK=%d \nalpha=%f \nbeta=%f \niteration=%d\n" % (len(corpus), len(voca.vocas), options.K, options.alpha, options.beta, options.iteration))
+    print ("\ncustomer=%d, items=%d, K=%d, alpha=%f, beta=%f, iter=%d\n" % (len(corpus), len(voca.vocas), options.K, options.alpha, options.beta, options.iteration))
 
 def show_cpt(logfile, cpt):
    d, tmp = cpt//86400, cpt%86400
