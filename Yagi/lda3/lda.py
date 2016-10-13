@@ -39,11 +39,8 @@ class LDA:
 
     def inference(self):
         def get_new_z(n, m, t):
-            k = np.zeros(self.K)
-            k[self.z_m_n[m][n]] = 1
 
-            # ここにバグ
-            p_z = (self.n_z_t[:, t] - k + self.beta_t[t]) * (n_m_z - k + self.alpha_z) / (self.n_z - k + sum(self.beta_t))
+            p_z = (self.n_z_t[:, t] + self.beta_t[t]) * (n_m_z + self.alpha_z) / (self.n_z + sum(self.beta_t))
             new_z = np.random.multinomial(1, p_z / p_z.sum()).argmax()
             return new_z
 
