@@ -81,16 +81,15 @@ class LDA:
 
 
     def worddist(self):
-        return self.n_z_t / self.n_z[:, np.newaxis]
+        return (self.n_z_t + self.beta) / (self.n_z[:, np.newaxis] + self.V*self.beta)
 
     def perplexity(self):
         docs = self.docs
         phi = self.worddist()
         log_per = 0
         N = 0
-        Kalpha = self.K * self.alpha
         for m, doc in enumerate(docs):
-            theta = self.n_m_z[m] / (len(self.docs[m]) + Kalpha)
+            theta = (self.n_m_z[m] + self.alpha) / (len(self.docs[m]) + self.K*self.alpha)
             for w in doc:
                 log_per -= np.log(np.inner(phi[:,w], theta))
             N += len(doc)
@@ -123,7 +122,7 @@ def main():
     parser.add_option("--beta", dest="beta", type="float", help="parameter beta", default=0.5)
     parser.add_option("-k", dest="K", type="int", help="number of topics", default=20)
     parser.add_option("-i", dest="iteration", type="int", help="iteration count", default=100)
-    parser.add_option("-s", dest="save", help="save fig (True/False)", default=False)
+    parser.add_option("-s", dest="save", help="save fig (True/False)", default=True)
     (options, args) = parser.parse_args()
 
     if not options.filename:
