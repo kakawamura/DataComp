@@ -1,0 +1,41 @@
+
+------------------- options--------------------
+
+customer=29977 
+items=274 
+K=15 
+alpha=0.500000 
+beta=0.500000 
+iteration=200
+
+--------------- computation --------------------
+
+initial perplexity=61.195060
+iter10 perplexity=51.302841
+iter20 perplexity=37.317067
+iter30 perplexity=35.351798
+iter40 perplexity=34.697733
+iter50 perplexity=34.320924
+iter60 perplexity=34.026773
+iter70 perplexity=33.840126
+iter80 perplexity=33.704740
+iter90 perplexity=33.613686
+iter100 perplexity=33.546751
+iter110 perplexity=33.484221
+iter120 perplexity=33.464288
+iter130 perplexity=33.422844
+iter140 perplexity=33.378984
+iter150 perplexity=33.330812
+iter160 perplexity=33.308144
+iter170 perplexity=33.269932
+iter180 perplexity=33.260385
+iter190 perplexity=33.251112
+iter200 perplexity=33.258012
+
+computation time : 0day, 2hour, 52minute, 40second
+
+------------------- parameters------------------
+
+alphaf
+0.525665900143 0.464521284542 0.407140587395 0.114746389805 0.144407380808 0.106591720554 0.363984365888 0.0696311741347 0.147452838256 0.158723579287 0.0866807608719 0.127073135471 0.112228986813 0.833251287656 0.103610001916
+------------------------------------------------
