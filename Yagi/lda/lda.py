@@ -117,7 +117,7 @@ def main():
 
     lda = LDA(options.K, options.alpha, options.beta, docs, voca.size())
 
-    path = output.get_path()
+    path = output.get_path(options.K)
     logfile = open(path+"log.txt", "w")
     output.show_options(logfile, corpus, voca, options)
     start = time.time()

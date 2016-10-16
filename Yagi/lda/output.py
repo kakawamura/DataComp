@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
 
-def get_path():
+def get_path(K):
     import datetime
     import os
     # 現在時刻の取得
     now = datetime.datetime.today()
-    path = "./log_" + "-".join([str(now.year), str(now.month).zfill(2), str(now.day).zfill(2), str(now.hour).zfill(2)]) + "/"
+    path = "./log_" + "-".join([str(now.year), str(now.month).zfill(2), str(now.day).zfill(2), str(now.hour).zfill(2)])+"_K"+str(K) + "/"
     # ディレクトリ生成
     os.mkdir(path)
     return path
