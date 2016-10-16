@@ -1,1 +1,4 @@
+.RData
+.RHistory
 data/
+*.un~
