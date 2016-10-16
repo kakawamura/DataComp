@@ -37,7 +37,7 @@ pie(genderRatio, col = rainbow(2))
 ```
 
 
-#### Creating a Pie chart of age ratio!
+#### Creating a Pie chart of age ratio
 
 ```{r}
 ages <- member["age"]
@@ -64,6 +64,5 @@ par(mfrow=c(1, 2))
 pie(agesRatio, col = rainbow(20))
 barplot(agesRatio, col = rainbow(20))
 ```
-
 
 
