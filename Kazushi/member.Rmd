@@ -1,5 +1,6 @@
 ---
 title: "Data Comp"
+output: pdf_document
 ---
 
 ### [About Data]
@@ -21,7 +22,7 @@ title: "Data Comp"
 
 #### Importing member.csv
 ```{r}
-member <- read.csv("member.csv", header = TRUE)
+member <- read.csv("data/member.csv", header = TRUE)
 ```
 
 #### Creating a Pie chart of gender ratio
