@@ -5,15 +5,22 @@
 import nltk, re
 
 
-def load_file(filename):
+def load_filenames(filedir):
+    import os
+    filenames = os.listdir('./'+filedir)
+    return filenames
+
+def load_file(filedir, filename):
     corpus = []
-    f = open(filename, 'r')
+    corpus_id = []
+    f = open('./' + filedir + '/' + filename, 'r')
     for line in f:
         doc = re.findall(r'\w+',line)
         if len(doc)>0:
-            corpus.append(doc)
+            corpus.append(doc[1:])
+            corpus_id.append(int(doc[0]))
     f.close()
-    return corpus
+    return (corpus_id, corpus)
 
 
 class Vocabulary:
