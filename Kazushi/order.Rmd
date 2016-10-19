@@ -1,0 +1,12 @@
+---
+title: Data Comp
+---
+
+
+### Introduction 
+
+### ~ Start Analyzing ~
+
+```{r}
+order <- read.csv("~/Developer/dataComp/DataComp/Kazushi/data/order.csv")
+```
