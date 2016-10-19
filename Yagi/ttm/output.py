@@ -3,18 +3,11 @@
 def get_path():
     import datetime
     import os
-    # 現在時刻の取得
     now = datetime.datetime.today()
     path = "./log_" + "-".join([str(now.year), str(now.month).zfill(2), str(now.day).zfill(2), str(now.hour).zfill(2)]) + "/"
-    # ディレクトリ生成
     os.mkdir(path)
     return path
 
-
-def show_options(logfile, corpus, voca, options):
-    logfile.write("\n------------------- options--------------------\n")
-    logfile.write("\ncustomer=%d \nitems=%d \nK=%d \nalpha=%f \nbeta=%f \niteration=%d\n" % (len(corpus), len(voca.vocas), options.K, options.alpha, options.beta, options.iteration))
-    print ("\ncustomer=%d, items=%d, K=%d, alpha=%f, beta=%f, iter=%d\n" % (len(corpus), len(voca.vocas), options.K, options.alpha, options.beta, options.iteration))
 
 
 def show_cpt(logfile, cpt):
