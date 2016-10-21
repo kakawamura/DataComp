@@ -1,0 +1,6 @@
+0 a a b b b b
+1 b b a a a a
+2 c c b b b b
+3 a a b b b b
+4 b b a a a a
+5 c c b b b b

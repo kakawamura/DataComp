@@ -18,52 +18,42 @@ def show_cpt(logfile, cpt):
    logfile.write("\ncomputation time : {0}day, {1}hour, {2}minute, {3}second\n".format(round(d), round(h), round(m), round(s)))
 
 
-def show_parameters(logfile, lda):
-    phi = lda.worddist()
+def show_parameters(logfile, ttm):
+    phi = ttm.worddist()
     logfile.write("\n------------------- parameters------------------\n")
     logfile.write("\nalphaf\n")
-    logfile.write(" ".join(list(map(str, lda.alpha_z))))
+    logfile.write(" ".join(list(map(str, ttm.alpha_z))))
     logfile.write("\n------------------------------------------------\n")
 
 
-def output_word_topic_dist(lda, voca, path):
+def output_word_topic_dist(ttm, voca, p, log_path):
     import numpy as np
-    worddist = open(path+"itemdist.txt", "w")
+    log_worddist = open(log_path+"itemdist_%d.txt" %p, "w")
 
-    zcount = np.zeros(lda.K, dtype=int)
-    wordcount = [dict() for k in range(lda.K)]
-    for xlist, zlist in zip(lda.docs, lda.z_m_n):
-        for x, z in zip(xlist, zlist):
-            zcount[z] += 1
-            if x in wordcount[z]:
-                wordcount[z][x] += 1
-            else:
-                wordcount[z][x] = 1
-
-    phi = lda.worddist()
-    for k in range(lda.K):
-        print ("\n-- topic: %d (%d words)" % (k, zcount[k]))
-        worddist.write("\n-- topic: %d (%d words)\n" % (k, zcount[k]))
-        for w in np.argsort(-phi[k])[:20]:
-            print ("%s: %f (%d)" % (voca[w], phi[k,w], wordcount[k].get(w,0)))
-            worddist.write("%s: %f (%d)\n" % (voca[w], phi[k,w], wordcount[k].get(w,0)))
-    worddist.flush()
-    worddist.close()
+    theta = ttm.theta_z_t
+    for k in range(ttm.K):
+        print ("\n-- topic: %d " %k)
+        log_worddist.write("\n-- topic: %d\n" %k)
+        for w in np.argsort(-theta[k])[:20]:
+            print ("%s: %f " % (voca[w], theta[k,w]))
+            log_worddist.write("%s: %f \n" % (voca[w], theta[k,w])) 
+    log_worddist.flush()
+    log_worddist.close()
 
 
-def save_fig(lda, K, path):
+def save_fig(ttm, K, path):
     import numpy as np
     import matplotlib.pyplot as plt
     import seaborn
-    phi = lda.worddist()
+    phi = ttm.worddist()
 
     plt.figure(figsize=(180, 100))
     plt.subplots_adjust(hspace=0.8, bottom=0.2)
     for k in range(K):
         plt.subplot(int(K)+1, 2, k+1)
         plt.title('topic%d' %k)
-        plt.bar(np.arange(lda.V), phi[k], align="center")
+        plt.bar(np.arange(ttm.V), phi[k], align="center")
         plt.xlabel('item')
-        plt.xticks(np.arange(lda.V))
+        plt.xticks(np.arange(ttm.V))
     plt.savefig(path + 'itemdist.png')
 
