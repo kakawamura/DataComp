@@ -97,10 +97,6 @@ class TTM:
             self.alpha_m = self.get_new_alpha(m)
 
 
-    def perplexity(self):
-        return 1
-
-
     def ttm_learning(self, filenames, filedir, log_path):
         import os
         import vocabulary
@@ -110,7 +106,6 @@ class TTM:
         os.mkdir(log_path+'itemdist/')
         voca = vocabulary.Vocabulary()
         for p in range(self.P):
-            print(filenames[p])
             (self.docs_id, self.docs) = vocabulary.load_file(filedir, filenames[p])
             self.docs = [voca.doc_to_ids(doc) for doc in self.docs]
             self.docs_n = np.zeros(self.D)
@@ -119,21 +114,17 @@ class TTM:
 
             self.param_init()
             self.z_init(self.docs_id, self.docs)
-            logfile = open(log_path+"log/priod"+str(p)+".txt", "w")
     
-            print ("\n priod%d" %p)
-            logfile.write("\n--------------- computation --------------------\n")
+            print ("\n======================================\n")
+            print ("              priod%d" %p)
+            print ("\n======================================")
         
             for i in range(self.I):
                 self.inference()
-                perp = self.perplexity()
 
             self.theta_z_t = self.get_new_theta()
             self.phi_m_z = self.get_new_phi()
-            print ("priod%d perplexity=%f" % (p + 1, perp))
 
-            logfile.flush()
-            logfile.close()
 
             output.output_word_topic_dist(self, voca, p, log_path+'itemdist/')
 
