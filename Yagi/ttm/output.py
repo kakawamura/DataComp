@@ -36,7 +36,8 @@ def output_word_topic_dist(ttm, voca, p, log_path):
     for k in range(ttm.K):
         print ("\n-- topic: %d " %k)
         log_worddist.write("\n-- topic: %d\n" %k)
-        for w in np.argsort(-theta[k])[:10]:
+        n = min(10,len(voca.vocas))
+        for w in np.argsort(-theta[k])[:n]:
             print ("%s: %f " % (voca[w], theta[k,w]))
             log_worddist.write("%s: %f \n" % (voca[w], theta[k,w])) 
     log_worddist.flush()

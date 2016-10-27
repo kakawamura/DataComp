@@ -1,6 +1,4 @@
-0 a a a a a a
 1 b b b b b b
 2 c c c c c c
-3 a a a a a a
 4 b b b b b b
 5 c c c c c c

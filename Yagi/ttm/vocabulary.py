@@ -15,7 +15,8 @@ def load_file(filedir, filename):
     corpus_id = []
     f = open('./' + filedir + '/' + filename, 'r')
     for line in f:
-        doc = re.findall(r'\w+',line)
+        doc = line.replace('\n', '').split(" ")
+        #doc = re.findall(r'\w+',line)
         if len(doc)>0:
             corpus.append(doc[1:])
             corpus_id.append(int(doc[0]))
