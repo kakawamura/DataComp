@@ -102,7 +102,6 @@ class TTM:
         import vocabulary
         import output
 
-        os.mkdir(log_path+'log/')
         os.mkdir(log_path+'itemdist/')
         voca = vocabulary.Vocabulary()
         for p in range(self.P):
@@ -138,7 +137,7 @@ def main():
     parser = optparse.OptionParser()
     parser.add_option("-f", dest="filedir", help="directory name which have files")
     parser.add_option("-d", dest="D", type="int", help="number of customers")
-    parser.add_option("-v", dest="V", type="int", help="number of vocabularys")
+    parser.add_option("-v", dest="V", type="int", help="number of itemss")
     parser.add_option("-k", dest="K", type="int", help="number of topics", default=20)
     parser.add_option("-p", dest="P", type="int", help="number of priods")
     parser.add_option("-i", dest="I", type="int", help="iteration count", default=100)
@@ -159,10 +158,21 @@ def main():
     if options.filedir:
         filenames = vocabulary.load_filenames(options.filedir)
 
-    path_log = output.get_path()
+    path_log = output.get_path(options)
+
+    os.mkdir(path_log+'log/')
+    logfile = open(path_log+'/log/log.txt', 'w') 
+    output.show_options(logfile, options)
 
     ttm = TTM(options.D, options.V, options.K, options.P, options.I)
+
+    begin = time.time()
     ttm.ttm_learning(filenames, options.filedir, path_log)
+    end = time.time()
+    output.show_computation_time(logfile, end - begin)
+
+    logfile.flush()
+    logfile.close()
 
 
 if __name__ == "__main__":

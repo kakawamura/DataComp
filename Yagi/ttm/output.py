@@ -1,29 +1,31 @@
 # -*- coding:utf-8 -*-
 
-def get_path():
+def get_path(options):
     import datetime
     import os
     now = datetime.datetime.today()
-    path = "./log_" + "-".join([str(now.year), str(now.month).zfill(2), str(now.day).zfill(2), str(now.hour).zfill(2)]) + "/"
+    path = "./log_" + "-".join([str(now.year), str(now.month).zfill(2), str(now.day).zfill(2), str(now.hour).zfill(2)]) + "_K"+str(options.K) + "_P" + str(options.P) + "_I" + str(options.I) +"/"
     os.mkdir(path)
     return path
 
 
 
-def show_cpt(logfile, cpt):
+def show_computation_time(logfile, cpt):
    d, tmp = cpt//86400, cpt%86400
    h, tmp = tmp//3600, tmp%3600
    m, s = tmp//60, tmp%60
    print("computation time : {0}day, {1}hour, {2}minute, {3}second".format(round(d), round(h), round(m), round(s)))
-   logfile.write("\ncomputation time : {0}day, {1}hour, {2}minute, {3}second\n".format(round(d), round(h), round(m), round(s)))
+   logfile.write("\n------------- computation time  --------------\n")
+   logfile.write("\n{0}day, {1}hour, {2}minute, {3}second\n".format(round(d), round(h), round(m), round(s)))
 
 
-def show_parameters(logfile, ttm):
-    phi = ttm.worddist()
-    logfile.write("\n------------------- parameters------------------\n")
-    logfile.write("\nalphaf\n")
-    logfile.write(" ".join(list(map(str, ttm.alpha_z))))
-    logfile.write("\n------------------------------------------------\n")
+def show_options(logfile, options):
+    logfile.write("\n------------------- options ------------------\n")
+    logfile.write("\nnumber of customers : " + str(options.D) +"\n")
+    logfile.write("number of items : " + str(options.V) +"\n")
+    logfile.write("number of topics : " + str(options.K) +"\n")
+    logfile.write("number of priods : " + str(options.P) +"\n")
+    logfile.write("iteration count : " + str(options.I) +"\n")
 
 
 def output_word_topic_dist(ttm, voca, p, log_path):
@@ -34,7 +36,7 @@ def output_word_topic_dist(ttm, voca, p, log_path):
     for k in range(ttm.K):
         print ("\n-- topic: %d " %k)
         log_worddist.write("\n-- topic: %d\n" %k)
-        for w in np.argsort(-theta[k])[:20]:
+        for w in np.argsort(-theta[k])[:10]:
             print ("%s: %f " % (voca[w], theta[k,w]))
             log_worddist.write("%s: %f \n" % (voca[w], theta[k,w])) 
     log_worddist.flush()
