@@ -30,44 +30,18 @@ def show_options(logfile, options):
 
 def output_word_topic_dist(ttm, voca, p, log_path):
     import numpy as np
-    theta = ttm.theta_z_t
+    log_worddist = open(log_path+"itemdist_%d.txt" %p, "w")
 
-    log_worddist_simplified = open(log_path+"itemdist_simplified/itemdist_"+str(p).zfill(2)+".txt", "w")
+    theta = ttm.theta_z_t
     for k in range(ttm.K):
         print ("\n-- topic: %d " %k)
-        log_worddist_simplified.write("\n-- topic: %d\n" %k)
+        log_worddist.write("\n-- topic: %d\n" %k)
         n = min(10,len(voca.vocas))
         for w in np.argsort(-theta[k])[:n]:
             print ("%s: %f " % (voca[w], theta[k,w]))
-            log_worddist_simplified.write("%s: %f \n" % (voca[w], theta[k,w])) 
-    log_worddist_simplified.flush()
-    log_worddist_simplified.close()
-
-    log_worddist = open(log_path+"itemdist/itemdist_"+str(p).zfill(2)+".txt", "w")
-
-    for k in range(ttm.K):
-        log_worddist.write(",".join(theta[k].astype(str))+"\n") 
+            log_worddist.write("%s: %f \n" % (voca[w], theta[k,w])) 
     log_worddist.flush()
     log_worddist.close()
-
-
-def output_word_topic_columns(ttm, voca, log_path):
-    log_worddist_columns = open(log_path+"itemdist/itemdist_columns.txt", "w")
-    log_worddist_columns.write(voca[0])
-    for t in range(1,ttm.V):
-        log_worddist_columns.write(","+voca[t]) 
-    log_worddist_columns.flush()
-    log_worddist_columns.close()
-
-
-def output_topic_user_dist(ttm, voca, p, log_path):
-    import numpy as np
-    phi = ttm.phi_m_z
-    log_topicdist = open(log_path+"topicdist/topicdist_"+str(p).zfill(2)+".txt", "w")
-    for d in range(ttm.D):
-        log_topicdist.write(",".join(phi[d].astype(str))+"\n") 
-    log_topicdist.flush()
-    log_topicdist.close()
 
 
 def save_fig(ttm, K, path):

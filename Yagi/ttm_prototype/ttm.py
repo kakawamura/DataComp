@@ -76,23 +76,6 @@ class TTM:
         new_theta = ((self.n_z_t.T + self.beta_z*self.theta_z_t.T)/(np.sum(self.n_z_t, axis=1) + self.beta_z)).T
         return new_theta
 
-    def perplexity(self, log_perp, i):
-        phi = self.get_new_phi()
-        theta = self.get_new_theta()
-        log_per = 0
-        N = 0
-        for m, doc in zip(self.docs_id, self.docs):
-            for w in doc:
-                log_per -= np.log(np.inner(phi[m], theta[:,w]))
-            N += len(doc)
-        perp = np.exp(log_per / N)
-        if i==0:
-            log_perp.write(str(perp)) 
-        else:
-            log_perp.write(","+str(perp)) 
-
-
-
     def inference(self):
         for (i, (m, doc)) in enumerate(zip(self.docs_id, self.docs)):
             z_n = self.z_m_n[i]
@@ -119,10 +102,7 @@ class TTM:
         import vocabulary
         import output
 
-        os.mkdir(log_path+'itemdist_simplified/')
         os.mkdir(log_path+'itemdist/')
-        os.mkdir(log_path+'topicdist/')
-        log_perp = open(log_path+"log/log_perplexity.txt", "w")
         voca = vocabulary.Vocabulary()
         for p in range(self.P):
             (self.docs_id, self.docs) = vocabulary.load_file(filedir, filenames[p])
@@ -140,18 +120,12 @@ class TTM:
         
             for i in range(self.I):
                 self.inference()
-                if i%10==0: perp = self.perplexity(log_perp, i)
-            log_perp.write("\n") 
-            
+
             self.theta_z_t = self.get_new_theta()
             self.phi_m_z = self.get_new_phi()
 
 
-            output.output_word_topic_dist(self, voca, p, log_path)
-            output.output_topic_user_dist(self, voca, p, log_path)
-        output.output_word_topic_columns(self, voca, log_path)
-        log_perp.flush()
-        log_perp.close()
+            output.output_word_topic_dist(self, voca, p, log_path+'itemdist/')
 
 
 def main():

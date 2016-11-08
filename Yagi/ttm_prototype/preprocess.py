@@ -34,14 +34,12 @@ def make_basket(table):
             basket[X[i,1]].append(str(X[i,2]))
     return basket
 
-def write_log(table, path, options):
+def write_log(table, path):
     N_user = len(set(table['customer_id']))
     N_category = len(set(table['item_category_2']))
     log_file = open(path + '/log.txt', 'w')
     log_file.write("user number : "+str(N_user) + "\n")
     log_file.write("category number : "+str(N_category) + "\n")
-    log_file.write("option MIN : "+str(options.MIN) + "\n")
-    log_file.write("option MAX : "+str(options.MAX) + "\n")
     log_file.flush()
     log_file.close()
 
@@ -69,7 +67,7 @@ def main():
     path = "./baskets"
     os.mkdir(path)
     os.mkdir(path+"/baskets_per_month")
-    write_log(table, path, options)
+    write_log(table, path)
     # make basket per month
     for i in range(1,13):
         table_per_month = table[table["order_month"]==i]
