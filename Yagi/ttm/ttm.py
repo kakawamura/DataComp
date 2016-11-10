@@ -149,7 +149,7 @@ class TTM:
 
             output.output_word_topic_dist(self, voca, p, log_path)
             output.output_topic_user_dist(self, voca, p, log_path)
-        output.output_word_topic_columns(self, voca, log_path)
+        output.output_word_topic_columns(self, voca, log_path) # need repairing
         log_perp.flush()
         log_perp.close()
 
