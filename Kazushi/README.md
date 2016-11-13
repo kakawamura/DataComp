@@ -101,4 +101,30 @@ CREATE TABLE member (
 Import member.csv to item table.
 ```sql
 COPY member(enquete_flag,customer_id,sex,age,registration_date,withdrawal_date,prefectures) FROM '/Users/yakiniku/data/membe.csv' CSV HEADER;
+
+
+
+### enquete
+
+```sql
+CREATE TABLE enquete (
+  answer_date char(016),
+  customer_id int8,
+  Q1_1 int2,Q1_2 int2,Q1_3 int2,Q1_4 int2,Q1_5 int2,Q1_6 int2,Q1_7 int2,Q1_8 int2,Q1_9 int2,Q1_10 int2,Q1_11 int2,Q1_12 int2,
+
+  Q2_1,Q2_2,Q2_3,Q2_4,Q2_5,Q2_6,Q2_7,Q2_8,Q2_9,Q2_10,Q2_11,Q2_12,Q2_13,Q2_14,Q3_1,Q3_2,Q3_3,Q3_4,Q3_5,Q3_6,Q3_7,Q3_8,Q3_9,Q3_10,Q3_11,Q3_12,Q3_13,Q3_14,Q3_15,Q3_16,Q3_17,Q3_18,
+  Q3_19,
+  Q4,
+  Q5,
+  Q6_1,Q6_2,Q6_3,Q6_4,Q6_5,Q6_6,Q6_7,Q6_8,Q6_9,
+  Q6_10,
+  Q7_1,Q7_2,Q7_3,Q7_4,Q7_5,Q7_6,Q7_7,Q7_8,Q7_9,Q7_10,Q7_11,
+  Q7_12,
+  Q8_1,Q8_2,Q8_3,Q8_4,Q8_5,Q8_6,Q8_7,Q8_8,Q8_9,Q8_10,Q8_11,Q8_12,Q8_13,Q8_14,Q8_15,Q8_16,Q8_17,Q8_18,Q8_19,Q8_20,Q8_21,Q8_22,Q8_23,Q8_24,Q8_25,Q8_26,Q8_27,Q8_28,Q8_29,Q8_30,Q8_31,
+  Q8_32,
+  Q9_1,Q9_2,Q9_3,Q9_4,Q9_5,Q9_6
+)
+
+
+```
 ```
