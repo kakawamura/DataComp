@@ -76,6 +76,23 @@ class TTM:
         new_theta = ((self.n_z_t.T + self.beta_z*self.theta_z_t.T)/(np.sum(self.n_z_t, axis=1) + self.beta_z)).T
         return new_theta
 
+    def perplexity(self, log_perp, i):
+        phi = self.get_new_phi()
+        theta = self.get_new_theta()
+        log_per = 0
+        N = 0
+        for m, doc in zip(self.docs_id, self.docs):
+            for w in doc:
+                log_per -= np.log(np.inner(phi[m], theta[:,w]))
+            N += len(doc)
+        perp = np.exp(log_per / N)
+        if i==0:
+            log_perp.write(str(perp)) 
+        else:
+            log_perp.write(","+str(perp)) 
+
+
+
     def inference(self):
         for (i, (m, doc)) in enumerate(zip(self.docs_id, self.docs)):
             z_n = self.z_m_n[i]
@@ -97,20 +114,17 @@ class TTM:
             self.alpha_m = self.get_new_alpha(m)
 
 
-    def perplexity(self):
-        return 1
-
-
     def ttm_learning(self, filenames, filedir, log_path):
         import os
         import vocabulary
         import output
 
-        os.mkdir(log_path+'log/')
+        os.mkdir(log_path+'itemdist_simplified/')
         os.mkdir(log_path+'itemdist/')
+        os.mkdir(log_path+'topicdist/')
+        log_perp = open(log_path+"log/log_perplexity.txt", "w")
         voca = vocabulary.Vocabulary()
         for p in range(self.P):
-            print(filenames[p])
             (self.docs_id, self.docs) = vocabulary.load_file(filedir, filenames[p])
             self.docs = [voca.doc_to_ids(doc) for doc in self.docs]
             self.docs_n = np.zeros(self.D)
@@ -119,23 +133,25 @@ class TTM:
 
             self.param_init()
             self.z_init(self.docs_id, self.docs)
-            logfile = open(log_path+"log/priod"+str(p)+".txt", "w")
     
-            print ("\n priod%d" %p)
-            logfile.write("\n--------------- computation --------------------\n")
+            print ("\n======================================\n")
+            print ("              priod%d" %p)
+            print ("\n======================================")
         
             for i in range(self.I):
                 self.inference()
-                perp = self.perplexity()
-
+                if i%10==0: perp = self.perplexity(log_perp, i)
+            log_perp.write("\n") 
+            
             self.theta_z_t = self.get_new_theta()
             self.phi_m_z = self.get_new_phi()
-            print ("priod%d perplexity=%f" % (p + 1, perp))
 
-            logfile.flush()
-            logfile.close()
 
-            output.output_word_topic_dist(self, voca, p, log_path+'itemdist/')
+            output.output_word_topic_dist(self, voca, p, log_path)
+            output.output_topic_user_dist(self, voca, p, log_path)
+        output.output_word_topic_columns(self, voca, log_path) # need repairing
+        log_perp.flush()
+        log_perp.close()
 
 
 def main():
@@ -147,7 +163,7 @@ def main():
     parser = optparse.OptionParser()
     parser.add_option("-f", dest="filedir", help="directory name which have files")
     parser.add_option("-d", dest="D", type="int", help="number of customers")
-    parser.add_option("-v", dest="V", type="int", help="number of vocabularys")
+    parser.add_option("-v", dest="V", type="int", help="number of itemss")
     parser.add_option("-k", dest="K", type="int", help="number of topics", default=20)
     parser.add_option("-p", dest="P", type="int", help="number of priods")
     parser.add_option("-i", dest="I", type="int", help="iteration count", default=100)
@@ -168,10 +184,21 @@ def main():
     if options.filedir:
         filenames = vocabulary.load_filenames(options.filedir)
 
-    path_log = output.get_path()
+    path_log = output.get_path(options)
+
+    os.mkdir(path_log+'log/')
+    logfile = open(path_log+'/log/log.txt', 'w') 
+    output.show_options(logfile, options)
 
     ttm = TTM(options.D, options.V, options.K, options.P, options.I)
+
+    begin = time.time()
     ttm.ttm_learning(filenames, options.filedir, path_log)
+    end = time.time()
+    output.show_computation_time(logfile, end - begin)
+
+    logfile.flush()
+    logfile.close()
 
 
 if __name__ == "__main__":

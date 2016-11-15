@@ -1,3 +1,0 @@
-0 a a a a b b
-2 a b b c c c
-4 b b c c c c

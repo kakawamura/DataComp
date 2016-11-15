@@ -1,0 +1,12 @@
+
+------------------- options ------------------
+
+number of customers : 101491
+number of items : 226
+number of topics : 13
+number of priods : 12
+iteration count : 200
+
+------------- computation time  --------------
+
+9day, 4hour, 20minute, 43second

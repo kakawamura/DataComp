@@ -1,5 +1,0 @@
-0 a b b b b b
-2 a a b b c c
-3 a a b b c c
-4 b c c c c c
-5 b b b b c c
