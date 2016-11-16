@@ -45,3 +45,82 @@ SELECT iod.order_id,
        LEFT JOIN item_has_no_brand i
        ON iod.item_id = i.item_id AND iod.item_detail_id = i.item_detail_id 
 );
+
+
+
+-- take 12389.3 seconds
+CREATE TABLE item_analyzed AS (
+SELECT *
+  FROM item
+ WHERE item_id IN (SELECT DISTINCT(item_id)
+                   	 FROM (SELECT item_id,
+                   	              MIN(item_category_1) AS item_category_1,
+                   	              COUNT(*)
+                   	         FROM log_comp
+                   	        GROUP BY item_id
+                   	       HAVING COUNT(*) >=5) as foo
+                   	 WHERE NOT EXISTS (SELECT *
+                   	                     FROM item
+                   	                    WHERE foo.item_category_1 IN ('その他', 'インテリア', 'コスメ/香水', 'マタニティ・ベビー', '水着/着物・浴衣', '財布/小物', '雑貨/ホビー/スポーツ', '音楽/本・雑誌', '食器/キッチン')))
+);
+
+
+CREATE TABLE log_comp_tmp AS (
+SELECT *
+  FROM log_comp
+ WHERE item_id IN (SELECT item_id
+                     FROM item_analyzed)
+);
+
+
+CREATE TABLE log_comp_tmp2 AS (
+SELECT *
+  FROM log_comp_tmp
+ WHERE customer_id IN (SELECT customer_id
+                         FROM log_comp_tmp
+                        GROUP BY customer_id
+                       HAVING COUNT(*)>=5 AND COUNT(*)<120)
+);
+
+
+
+CREATE TABLE member_analyzed AS (
+SELECT *,
+       row_number() over()-1  new_customer_id
+  FROM member
+ WHERE customer_id IN (SELECT DISTINCT(customer_id)
+                         FROM log_comp_tmp2)
+);
+
+
+CREATE TABLE log_comp_analyzed AS (
+SELECT l.order_id,
+       l.order_detail_id,
+       l.customer_id,
+       m.new_customer_id,
+       l.sex,
+       l.age,
+       l.registration_date,
+       l.withdrawal_date,
+       l.prefectures,
+       l.reservation_flag,
+       l.device,
+       l.order_date,
+       l.additional_fee,
+       l.item_id,
+       l.item_detail_id,
+       l.color,
+       l.color_category,
+       l.size,
+       l.item_category_1,
+       l.item_category_2,
+       l.shop_id,
+       l.sale_item_flag,
+       l.order_amount,
+       l.quantity
+  FROM log_comp_tmp2 l
+       LEFT JOIN member_analyzed m 
+       ON l.customer_id = m.customer_id 
+);
+
+DROP TABLE log_comp_tmp, log_comp_tmp2
