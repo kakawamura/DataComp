@@ -1,4 +1,3 @@
-for i in `seq 5 20`
-do
-    nohup python ttm.py -f baskets/baskets_per_month -d 101491 -v 226 -k $i -p 12 -i 100 &
-done
+nohup python ttm.py -f baskets/baskets_per_month -d 11194 -v 5 -k 5 -p 12 -i 100 &
+nohup python ttm.py -f baskets/baskets_per_month -d 11194 -v 5 -k 7 -p 12 -i 100 &
+nohup python ttm.py -f baskets/baskets_per_month -d 11194 -v 5 -k 10 -p 12 -i 100 &

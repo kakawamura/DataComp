@@ -41,8 +41,8 @@ def write_log(table, path):
 def write_file(filepath, basket):
     output_file = open(filepath, 'w')
     for (key, value) in basket.items():
-        output_file.write(str(key)+',')
-        output_file.write(",".join(value) + "\n")
+        output_file.write(str(key)+' ')
+        output_file.write(" ".join(value) + "\n")
     output_file.flush()
     output_file.close()
 
