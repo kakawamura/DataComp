@@ -11,7 +11,9 @@ def time2month(t):
 
 def get_table():
     log = pd.read_csv("/Users/TakayukiYagi/Developer/M1/competition/data/log_comp_analyzed.csv")
-    df = log[['order_date', 'new_customer_id', 'item_id']]
+    dic = pd.read_csv("/Users/TakayukiYagi/Developer/M1/competition/data/item2category.csv")
+    df = pd.merge(log, dic, left_on='new_item_id', right_on='new_item_id', how='left')
+    df = df[['order_date', 'new_customer_id', 'label']]
     df["order_month"] = df.order_date.apply(time2month)
     return df
 
@@ -28,7 +30,7 @@ def make_basket(table):
 
 def write_log(table, path):
     N_user = len(set(table['new_customer_id']))
-    N_item = len(set(table['item_id']))
+    N_item = len(set(table['label']))
     log_file = open(path + '/log.txt', 'w')
     log_file.write("user number : "+str(N_user) + "\n")
     log_file.write("category number : "+str(N_item) + "\n")
