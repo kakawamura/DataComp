@@ -1,6 +1,7 @@
 
 CREATE TABLE item_has_no_brand AS(
-SELECT *
+SELECT row_number() over()-1  new_item_id,
+       *
   FROM (SELECT DISTINCT item_id,
                item_detail_id,
                color,
@@ -26,6 +27,7 @@ SELECT iod.order_id,
        io.device,
        io.order_date,
        io.additional_fee,
+       i.new_item_id,
        iod.item_id,
        iod.item_detail_id,
        i.color,
@@ -48,27 +50,27 @@ SELECT iod.order_id,
 
 
 
--- take 12389.3 seconds
+-- take 5429.3 seconds
 CREATE TABLE item_analyzed AS (
 SELECT *
-  FROM item
- WHERE item_id IN (SELECT DISTINCT(item_id)
-                   	 FROM (SELECT item_id,
-                   	              MIN(item_category_1) AS item_category_1,
-                   	              COUNT(*)
-                   	         FROM log_comp
-                   	        GROUP BY item_id
-                   	       HAVING COUNT(*) >=5) as foo
-                   	 WHERE NOT EXISTS (SELECT *
-                   	                     FROM item
-                   	                    WHERE foo.item_category_1 IN ('その他', 'インテリア', 'コスメ/香水', 'マタニティ・ベビー', '水着/着物・浴衣', '財布/小物', '雑貨/ホビー/スポーツ', '音楽/本・雑誌', '食器/キッチン')))
+  FROM item_has_no_brand
+ WHERE new_item_id IN (SELECT new_item_id
+                   	     FROM (SELECT new_item_id,
+                   	                MIN(item_category_1) AS item_category_1,
+                   	                COUNT(*)
+                   	           FROM log_comp
+                   	          GROUP BY new_item_id
+                   	         HAVING COUNT(*) >=5) as foo
+                   	   WHERE NOT EXISTS (SELECT *
+                   	                       FROM item_has_no_brand
+                   	                      WHERE foo.item_category_1 IN ('その他', 'インテリア', 'コスメ/香水', 'マタニティ・ベビー', '水着/着物・浴衣', '財布/小物', '雑貨/ホビー/スポーツ', '音楽/本・雑誌', '食器/キッチン')))
 );
 
 
 CREATE TABLE log_comp_tmp AS (
 SELECT *
   FROM log_comp
- WHERE item_id IN (SELECT item_id
+ WHERE new_item_id IN (SELECT new_item_id
                      FROM item_analyzed)
 );
 
@@ -107,6 +109,7 @@ SELECT l.order_id,
        l.device,
        l.order_date,
        l.additional_fee,
+       l.new_item_id,
        l.item_id,
        l.item_detail_id,
        l.color,
@@ -124,3 +127,11 @@ SELECT l.order_id,
 );
 
 DROP TABLE log_comp_tmp, log_comp_tmp2
+
+CREATE TABLE item_analyzed_2 AS (
+SELECT *
+  FROM item_analyzed
+ WHERE new_item_id IN (SELECT DISTINCT(new_item_id)
+                         FROM log_comp_analyzed)
+);
+

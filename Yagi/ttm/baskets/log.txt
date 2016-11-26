@@ -1,4 +1,0 @@
-user number : 101491
-category number : 226
-option MIN : 10
-option MAX : 100
