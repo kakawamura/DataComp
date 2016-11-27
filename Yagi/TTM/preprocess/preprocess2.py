@@ -9,9 +9,9 @@ def time2month(t):
     tdatetime = datetime.datetime.strptime(t, '%Y-%m-%d %H:%M')
     return int(tdatetime.month)
 
-def get_table():
+def get_table(item2category):
     log = pd.read_csv("/Users/TakayukiYagi/Developer/M1/competition/data/log_comp_analyzed.csv")
-    dic = pd.read_csv("/Users/TakayukiYagi/Developer/M1/competition/data/item2category.csv")
+    dic = pd.read_csv("/Users/TakayukiYagi/Developer/M1/competition/data/" + item2category)
     df = pd.merge(log, dic, left_on='new_item_id', right_on='new_item_id', how='left')
     df = df[['order_date', 'new_customer_id', 'label']]
     df["order_month"] = df.order_date.apply(time2month)
@@ -47,9 +47,14 @@ def write_file(filepath, basket):
     output_file.close()
 
 def main():
+    import optparse
     import os
-    table = get_table()
-    path = "./baskets"
+    parser = optparse.OptionParser()
+    parser.add_option("-f", dest="item2category", help="select item2category.csv")
+    (options, args) = parser.parse_args()
+
+    table = get_table(options.item2category)
+    path = "../data/baskets_" + options.item2category[14:-4]
     os.mkdir(path)
     os.mkdir(path+"/baskets_per_month")
     write_log(table, path)
