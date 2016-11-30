@@ -4,7 +4,7 @@ output:
   html_document: default
 ---
 
-# クラスタの平均
+# クラスタ ex: P(クラスタ1)
 ```{r}
 getProbByCluster <- function(file) {
   topics <- read.csv(file, header = FALSE)
@@ -29,13 +29,12 @@ file <- './data/topicdist/topicdist_11.txt'
 print(getProbByCluster(file))
 ```
 
-# 確率
+# 確率 ex: P(男)
 
 ```{r}
-
 getProbFromMember <- function(key, value) {
   file <- './data/member_analyzed.csv'
-  members <- read.csv(file,heade=TRUE)
+  members <- read.csv(file,header=TRUE)
   
   # 条件の行数を取得する
   count <- table(members[key] == value)[2]
@@ -49,10 +48,41 @@ getProbFromMember <- function(key, value) {
 print(getProbFromMember('sex', 1))
 print(getProbFromMember('prefectures', 17))
 print(getProbFromMember('age', 2))
-
-
 ```
 
+# ex: P(クラスタ1 | 男)
+```{r}
+# 関数名がクソ
+getProbForMemberByCluster <- function(key, value, topicFile) {
+  file <- './data/member_analyzed.csv'
+  members <- read.csv(file, header=TRUE)
+  tmp <- members[key] == value
+ 
+  topics <- read.csv(topicFile, header=TRUE)
+  res <- c()
+  
+  ## for each clusters
+  for(clusIndex in 1:ncol(topics)) {
+    clusRes <- c()
+    
+    ## for each members
+    for(i in 1:nrow(topics)) {
+      if(tmp[i] == TRUE) {
+        # only check cluster 1
+        clusRes <- c(clusRes, topics[i, clusIndex])
+      }
+    }
+    
+    res <- c(res, mean(clusRes))
+      
+  }
+  
+  return(res)
+}
+
+file <- './data/topicdist/topicdist_11.txt'
+print(getProbForMemberByCluster('age', 2, file))
+```
 
 
 
