@@ -1,0 +1,66 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# クラスタの平均
+```{r}
+getProbByCluster <- function(file) {
+  topics <- read.csv(file, header = FALSE)
+  
+  clusterCount <- ncol(topics)
+  result <- data.frame()
+  
+  # Get mean of each cluster
+  means <- c()
+  for (i in 1:clusterCount) {
+    means <- c(means, mean(topics[,i]))
+  }
+  result <- rbind(result, means)
+  
+  # Name columns
+  colnames(result) <- 1:clusterCount
+  
+  return(result)
+}
+
+file <- './data/topicdist/topicdist_11.txt'
+print(getProbByCluster(file))
+```
+
+# 確率
+
+```{r}
+
+getProbFromMember <- function(key, value) {
+  file <- './data/member_analyzed.csv'
+  members <- read.csv(file,heade=TRUE)
+  
+  # 条件の行数を取得する
+  count <- table(members[key] == value)[2]
+  
+  prob <- count / nrow(members)
+  names(prob) <- NULL
+  
+  return(prob)
+}
+
+print(getProbFromMember('sex', 1))
+print(getProbFromMember('prefectures', 17))
+print(getProbFromMember('age', 2))
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
