@@ -10,17 +10,12 @@ getProbByCluster <- function(file) {
   topics <- read.csv(file, header = FALSE)
   
   clusterCount <- ncol(topics)
-  result <- data.frame()
+  result <- c()
   
   # Get mean of each cluster
-  means <- c()
   for (i in 1:clusterCount) {
-    means <- c(means, mean(topics[,i]))
+    result <- c(result, mean(topics[,i]))
   }
-  result <- rbind(result, means)
-  
-  # Name columns
-  colnames(result) <- 1:clusterCount
   
   return(result)
 }
@@ -53,8 +48,8 @@ print(getProbFromMember('age', 2))
 # ex: P(クラスタ1 | 男)
 ```{r}
 # 関数名がクソ
-getProbForMemberByCluster <- function(key, value, topicFile) {
-  file <- './data/member_analyzed.csv'
+getProbForMemberByCluster <- function(key, value, topicFile, file) {
+  # file <- './data/member_analyzed.csv'
   members <- read.csv(file, header=TRUE)
   tmp <- members[key] == value
  
@@ -80,11 +75,47 @@ getProbForMemberByCluster <- function(key, value, topicFile) {
   return(res)
 }
 
+memberFile <- './data/member_analyzed.csv'
 file <- './data/topicdist/topicdist_11.txt'
-print(getProbForMemberByCluster('age', 2, file))
+print(getProbForMemberByCluster('age', 2, file, memberFile))
 ```
 
+# 合わせ技
 
+```{r}
+# 関数名がクソ
+
+getResult <- function(topicDistFile, memberFile, key, value) {
+  
+  # P(男)
+  var1 <- getProbFromMember(key, value)
+  # P(クラスタ|男)
+  var2 <- getProbForMemberByCluster(key, value, topicDistFile, memberFile)
+  # P(クラスタ)
+  var3  <-getProbByCluster(topicDistFile)
+  
+  result <- c()
+  
+  numOfCluters = length(var2)
+  
+  for(i in 1:numOfCluters) {
+    
+    r <- (var2[i] * var1) / var3[i]
+    
+    result <- c(result, r)
+  }
+  
+  return(result)
+}
+
+memberFile <- './data/member_analyzed.csv'
+topicsDistFile = '~/Developer/DataComp/Yagi/ttm/log/log_2016-11-26-18/log_2016-11-26-18_K5_P12_I100/topicdist/topicdist_11.txt'
+
+getResult(topicsDistFile, memberFile, 'sex', 1)
+getResult(topicsDistFile, memberFile, 'sex', 2)
+getResult(topicsDistFile, memberFile, 'prefecture', 1)
+
+```
 
 
 
