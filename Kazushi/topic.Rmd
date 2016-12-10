@@ -85,8 +85,8 @@ print(getProbForMemberByCluster('age', 2, file, memberFile))
 ```{r}
 # 関数名がクソ
 
-getResult <- function(topicDistFile, memberFile, key, value) {
-  
+getResult <- function(topicDistFile, memberFile, key, value, saveDist = "~/") {
+  library(ggplot2)
   # P(男)
   var1 <- getProbFromMember(key, value)
   # P(クラスタ|男)
@@ -105,15 +105,27 @@ getResult <- function(topicDistFile, memberFile, key, value) {
     result <- c(result, r)
   }
   
+  # save the graph
+  df = data.frame(result)
+  graph <- ggplot(data.frame(result), aes(seq_along(result), result)) 
+  graph <- graph + ggtitle(paste(key, value))
+  graph <- graph + geom_bar(stat="identity")
+  graph <- graph + theme(plot.title = element_text(lineheight=.8, face="bold")) + ylim(0,1)
+  file <- paste(saveDist, key, "_", value,".png",sep="")
+  ggsave(file=file)
+  
   return(result)
 }
 
 memberFile <- './data/member_analyzed.csv'
 topicsDistFile = '~/Developer/DataComp/Yagi/ttm/log/log_2016-11-26-18/log_2016-11-26-18_K5_P12_I100/topicdist/topicdist_11.txt'
 
-getResult(topicsDistFile, memberFile, 'sex', 1)
-getResult(topicsDistFile, memberFile, 'sex', 2)
-getResult(topicsDistFile, memberFile, 'prefecture', 1)
+result <- getResult(topicsDistFile, memberFile, 'sex', 1)
+result <- getResult(topicsDistFile, memberFile, 'sex', 2)
+
+for(i in 1:47) {
+  getResult(topicsDistFile, memberFile, 'prefectures', i)
+}
 
 ```
 
