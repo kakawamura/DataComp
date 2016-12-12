@@ -4,7 +4,7 @@ def get_path(options):
     import datetime
     import os
     now = datetime.datetime.today()
-    path = "./log_" + "-".join([str(now.year), str(now.month).zfill(2), str(now.day).zfill(2), str(now.hour).zfill(2)]) + "_K"+str(options.K) + "_P" + str(options.P) + "_I" + str(options.I) +"/"
+    path = "./log_" + "-".join([str(now.year), str(now.month).zfill(2), str(now.day).zfill(2), str(now.hour).zfill(2)], str(now.microsecond)) + "_K"+str(options.K) + "_P" + str(options.P) + "_I" + str(options.I) +"/"
     os.mkdir(path)
     return path
 
