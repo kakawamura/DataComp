@@ -135,3 +135,11 @@ SELECT *
                          FROM log_comp_analyzed)
 );
 
+
+CREATE TABLE enquete_analyzed AS (
+SELECT m.new_customer_id,
+       e.*
+  FROM member_analyzed m
+       LEFT JOIN enquete e
+       ON m.customer_id = e.customer_id
+);
