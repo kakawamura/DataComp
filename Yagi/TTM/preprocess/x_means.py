@@ -20,6 +20,7 @@ class XMeans:
         """
         self.k_init = k_init
         self.k_means_args = k_means_args
+        self.bic_list = []
 
     def fit(self, X):
         """
@@ -58,6 +59,7 @@ class XMeans:
             beta = np.linalg.norm(c1.center - c2.center) / (np.sqrt(np.abs(np.linalg.det(c1.cov) + np.linalg.det(c2.cov))) + eps) 
             alpha = 0.5 / stats.norm.cdf(beta)
             bic = -2 * (cluster.size * np.log(alpha) + c1.log_likelihood() + c2.log_likelihood()) + 2 * cluster.df * np.log(cluster.size)
+            self.bic_list.append(bic)
 
             if bic < cluster.bic():
                 self.__recursively_split([c1, c2])
